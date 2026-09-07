@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://CAMBIAR-ENDPOINT-RDS:5432/carritodb}
+    username: ${DB_USERNAME:CAMBIAR}
+    password: ${DB_PASSWORD:CAMBIAR}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AZURE_AD_ISSUER_URI:https://login.microsoftonline.com/CAMBIAR-TENANT-ID/v2.0}
+
+server:
+  port: ${SERVER_PORT:8082}

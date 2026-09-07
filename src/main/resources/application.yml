@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ms-carrito-compras
+  profiles:
+    active: dev
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

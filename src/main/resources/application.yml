@@ -3,6 +3,11 @@ spring:
     name: ms-carrito-compras
   profiles:
     active: dev
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://login.microsoftonline.com/6db58306-b3da-4d2e-99ea-5df5304ab630/discovery/v2.0/keys
 
 server:
   port: 8082

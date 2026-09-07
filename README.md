@@ -1,46 +1,31 @@
-# ms-carrito-compras
+# Pedidos360 - Microservicio de Carrito de Compras (`ms-carrito-compras`)
 
-Microservicio de carrito/compras del sistema **Pedidos360**. A diferencia
-del catálogo, es **completamente privado**: ningún endpoint es público,
-todos exigen un JWT válido emitido por Azure AD, y las operaciones de
-escritura además exigen el scope `Carrito.Write`.
+Este microservicio gestiona la lógica del carrito de compras, la adición/eliminación de items y la confirmación de la compra en la arquitectura del sistema **Pedidos360**.
 
-## Estructura
+## 🛠️ Tecnologías Utilizadas
 
-```
-src/main/java/cl/duoc/pedidos360/carrito/
- ├─ CarritoComprasApplication.java
- ├─ config/SecurityConfig.java          anyRequest().authenticated() + @EnableMethodSecurity
- ├─ controller/CarritoController.java   extrae el usuario SIEMPRE desde el JWT (claim oid/sub)
- ├─ dto/
- ├─ entity/Carrito.java, CarritoItem.java
- ├─ repository/CarritoRepository.java
- ├─ service/                           valida que el carrito pertenezca al usuario autenticado
- └─ exception/
-```
+- **Java 17**
+- **Spring Boot 3.3.x**
+- **Spring Security** (OAuth2 Resource Server)
+- **Spring Data JPA**
+- **H2 Database** (Base de datos en memoria para desarrollo)
+- **Maven**
 
-## Decisiones de diseño relevantes
+## 🔐 Seguridad e Integración
 
-- **El `usuarioId` nunca viaja en el body de la request.** Siempre se
-  obtiene del JWT ya validado (claim `oid`, con fallback a `sub`). Esto
-  evita que un usuario autenticado pueda leer o modificar el carrito de
-  otra persona simplemente cambiando un id en el request.
-- **Doble candado en escritura:** `@PreAuthorize("hasAuthority('SCOPE_Carrito.Write')")`
-  exige que el JWT traiga ese scope, ademas de estar autenticado.
+- **Autenticación:** Microsoft Entra ID (Azure AD).
+- **Validación JWT:** Implementación personalizada de `JwtDecoder` para consumo de llaves JWK y manejo de tokens `v1.0`/`v2.0` (`scp` claim scope).
+- **CORS:** Configurado para permitir peticiones desde la aplicación frontend Angular (`http://localhost:4200`).
 
-## Cómo correrlo localmente
+## 🚀 Requisitos e Instalación
 
-```bash
-mvn spring-boot:run
-```
+### Requisitos previos
+- JDK 17 instalado
+- Maven (opcional, se puede usar el wrapper incluido `./mvnw`)
 
-Perfil `dev` por defecto, con H2 en memoria (puerto de la app: 8082).
+### Ejecución local
 
-## Pendiente para el encargo (EP1) y el despliegue (EP2)
-
-- [ ] Reemplazar `{tenant-id}` en `application-dev.yml` con el tenant real.
-- [ ] Crear en Azure AD el scope `Carrito.Write` dentro del App Registration
-      y asignarlo a los usuarios/roles correspondientes.
-- [ ] Desplegar en EC2 y registrar sus rutas en el API Gateway de AWS,
-      igual que `ms-productos-catalogo`.
-- [ ] Migrar `application-prod.yml` con el endpoint real de RDS.
+1. Clonar el repositorio:
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd ms-carrito-compras
